@@ -1,0 +1,296 @@
+<html lang="en">
+
+</html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="The HTML5 Herald" />
+    <meta name="author" content="SitePoint" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineSweeper</title>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body {
+            margin: 0px;
+            font-family: poppins;
+        }
+
+        .main-wrapper {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .secondary-wrapper {
+            display: flex;
+            margin: auto;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            width: 80%;
+            height: 100vh;
+        }
+
+        .start-menu {
+            flex-direction: column;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .start-menu-modal {
+            width: 80%;
+            height: 60vh;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #EFEFEF;
+        }
+
+        button {
+            border-width: 3px;
+            color: #FFF;
+            width: 50%;
+            font-family: poppins;
+            font-size: 1.2rem;
+            background-color: #464646;
+            border-style: none;
+            border-color: #EFEFEF;
+            border-radius: 1rem;
+            height: 3rem;
+            cursor: pointer;
+
+        }
+
+        .grid-wrapper {
+            position: absolute;
+        }
+
+        .grid {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .grid>div {
+            display: flex;
+            gap: 0.3rem;
+            flex-direction: row;
+            cursor: pointer;
+        }
+
+        .grid>div>div {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 0.35rem;
+            text-align: center;
+            background-color: #EFEFEF;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+pointer
+<body>
+    <div class="main-wrapper">
+        <div class="secondary-wrapper">
+            <div class="start-menu" id="start-menu">
+                <h1> MineSweeper</h1>
+                <div class="start-menu-modal">
+                    <button id="start">Start</button>
+                </div>
+            </div>
+            <div class="grid-wrapper hide" id="grid-wrapper">
+                <div class="grid" id="grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start');
+        const startMenu = document.getElementById('start-menu');
+        const gridMenu = document.getElementById('grid-wrapper');
+        const grid = document.getElementById('grid');
+
+        startBtn.addEventListener('click', () => {
+            startMenu.classList.add('hide');
+            gridMenu.classList.remove('hide');
+        });
+
+        let gridHeight = 10;
+        let gridWidth = 10;
+        let gridArr = [];
+        let chanceOfMine = 0.4;
+        let numberOfMines = Math.floor(gridHeight * gridWidth * chanceOfMine);
+        let firstTouch = true;
+        let gameOver = false;
+
+        generateGrid();
+        createCanvas();
+        map();
+
+        function call(e) {
+            let y = Math.floor(e / 10);
+            let x = e % 10;
+            if (!gameOver) {
+                if (firstTouch) {
+                    if (gridArr[y][x] != -1) {
+                        firstTouch = false;
+
+                        while (y < gridHeight) {
+                            let ele = document.getElementById(y * 10 + x);
+                            ele.firstChild.innerText = gridArr[y][x];
+                            while (x < gridWidth) {
+                                let ele = document.getElementById(y * 10 + x);
+                                ele.firstChild.innerText = gridArr[y][x];
+                                x++;
+                                if (gridArr[y][x] == -1) {
+                                    break;
+                                }
+                            }
+                            x = e % 10;
+                            while (x > 0) {
+                                let ele = document.getElementById(y * 10 + x);
+                                ele.firstChild.innerText = gridArr[y][x];
+                                x--;
+                                if (gridArr[y][x] == -1) {
+                                    break;
+                                }
+                            }
+                            x = e % 10;
+                            y++;
+                            if (gridArr[y][x] == -1) {
+                                break;
+                            }
+                        }
+                        y = Math.floor(e / 10);
+                        x = e % 10;
+                        while (y > 0) {
+                            let ele = document.getElementById(y * 10 + x);
+                            ele.firstChild.innerText = gridArr[y][x];
+                            while (x < gridWidth) {
+                                let ele = document.getElementById(y * 10 + x);
+                                ele.firstChild.innerText = gridArr[y][x];
+                                x++;
+                                if (gridArr[y][x] == -1) {
+                                    break;
+                                }
+                            }
+                            x = e % 10;
+                            while (x > 0) {
+                                let ele = document.getElementById(y * 10 + x);
+                                ele.firstChild.innerText = gridArr[y][x];
+                                x--;
+                                if (gridArr[y][x] == -1) {
+                                    break;
+                                }
+                            }
+                            x = e % 10;
+                            y--;
+                            if (gridArr[y][x] == -1) {
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        while (gridArr[y][x] == -1) {
+                            generateGrid();
+                            map();
+                            call(e);
+                        }
+                    }
+                }
+                else {
+                    if (gridArr[y][x] == -1) {
+                        gameOver = true;
+                        let ele = document.getElementById(y * 10 + x);
+                        ele.firstChild.innerText = gridArr[y][x];
+                    }
+                    else {
+                        let ele = document.getElementById(y * 10 + x);
+                        ele.firstChild.innerText = gridArr[y][x];
+                    }
+                }
+            }
+        }
+
+        function generateGrid() {
+            gridArr = [];
+            for (var i = 0; i < gridHeight; i++) {
+                gridArrTemp = [];
+                for (var j = 0; j < gridWidth; j++) {
+                    gridArrTemp.push(null);
+                    if (Math.random() < chanceOfMine) {
+                        gridArrTemp[j] = -1;
+                        numberOfMines--;
+                    }
+                }
+                gridArr.push(gridArrTemp);
+            }
+        }
+
+        function createCanvas() {
+            for (var i = 0; i < gridHeight; i++) {
+                let row = document.createElement('div');
+                for (var j = 0; j < gridWidth; j++) {
+                    let ele = document.createElement('div');
+                    let pInEle = document.createElement('p');
+                    ele.setAttribute('id', i * 10 + j)
+                    ele.setAttribute('onclick', "call(this.id)")
+                    ele.append(pInEle);
+                    row.append(ele);
+                }
+                grid.append(row);
+            }
+
+        }
+
+        function map() {
+            for (var i = 0; i < gridHeight; i++) {
+                for (var j = 0; j < gridWidth; j++) {
+                    if (gridArr[i][j] != -1) {
+                        gridArr[i][j] = minesInRadius(i, j);
+                    }
+                }
+            }
+        }
+
+        function update() {
+            for (var i = 0; i < gridHeight; i++) {
+                for (var j = 0; j < gridWidth; j++) {
+                    if (gridArr[i][j] != -1) {
+                        let ele = document.getElementById(i * 10 + j);
+                        ele.firstChild.innerHTML = gridArr[i][j];
+                    }
+                }
+            }
+        }
+
+        function minesInRadius(i, j) {
+            let count = 0;
+            for (var k = -1; k < 2; k++) {
+                if (i + k >= 0 && i + k < gridHeight) {
+                    for (var l = -1; l < 2; l++) {
+                        if (j + l >= 0 && j + l < gridWidth) {
+                            if (gridArr[i + k][j + l] == -1) {
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+    </script>
+</body>
+
+</html>
