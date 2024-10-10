@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Diljit Singh">
+    <meta name="description" content="This is a basic and fun minesweeper project made to practice my skills">
+    <meta name="keywords" content="MineSweeper, html, css, javascript, typescript, jquery">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MineSweeper</title>
+    <link rel="icon" type="image/x-icon" href="./Mine.svg">
+
+
+    <!-- font-import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=account_circle,share,volume_up" />
+
+
+    <!-- connecting the stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- JQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="Mine.svg" alt="a svg is supposed to be here" class="mine-logo">
+            <h1 class="navbar-title">MineSweeper</h1>
+        </div>
+        <div class="navbar-middle">
+            <div class="number-of-mines">
+                <div class="number-of-mines-left">
+                    <img src="Mine.svg" alt="a svg is supposed to be here" class="mine-logo">
+                </div>
+                <div class="number-of-mines-right"><p class="number-of-mines-text">0</p></div>
+            </div>
+        </div>
+        <div class="navbar-end">
+            <span class="material-symbols-outlined">
+                share
+            </span>
+            <span class="material-symbols-outlined">
+                account_circle
+            </span>
+            <span class="material-symbols-outlined">
+                volume_up
+            </span>
+        </div>
+    </nav>
+
+
+
+    <div class="choose-mode">
+        <div class="choose-mode-left choose-mode-subbox">
+            <img src="Mine.svg" alt="a svg is supposed to be here" class="mine-logo">
+        </div>
+        <div class="choose-mode-right choose-mode-subbox">
+            <img src="Shovel.svg" alt="a svg is supposed to be here" class="mine-logo">
+        </div>
+    </div>
+
+    
+
+    <div class="main-wrapper">
+        <div class="sub-wrapper">
+            <div class="grid"></div>
+        </div>
+    </div>
+
+
+    <script type="module" src="dist/index.js"></script>
+</body>
+
+</html>

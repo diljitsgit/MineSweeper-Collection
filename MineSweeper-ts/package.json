@@ -1,0 +1,21 @@
+{
+  "name": "minesweeper-ts",
+  "version": "1.0.0",
+  "description": "Making my own fun and innovative version of minesweeper",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "minesweeper",
+    "html",
+    "css",
+    "javascript",
+    "typescript"
+  ],
+  "author": "Dilj",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jquery": "^3.5.31"
+  }
+}

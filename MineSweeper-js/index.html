@@ -17,6 +17,18 @@
             font-family: poppins;
         }
 
+        input {
+            border-width: 3px;
+            width: 50%;
+            font-family: poppins;
+            font-size: 1.2rem;
+            background-color: #FFFFFF;
+            border-style: solid;
+            border-color: #EFEFEF;
+            border-radius: 1rem;
+            height: 3rem;
+        }
+
         .main-wrapper {
             margin: 0;
             display: flex;
@@ -68,7 +80,7 @@
         }
 
         .grid-wrapper {
-            position: absolute;
+            margin: auto;
         }
 
         .grid {
@@ -98,13 +110,20 @@
         }
     </style>
 </head>
-pointer
+
 <body>
     <div class="main-wrapper">
         <div class="secondary-wrapper">
             <div class="start-menu" id="start-menu">
                 <h1> MineSweeper</h1>
                 <div class="start-menu-modal">
+                    <p>Width</p>
+                    <input type="text" id="width">
+                    <p>height</p>
+                    <input type="text" id="height">
+                    <p>probability of mine (0-1)</p>
+                    <input type="text" id="prob">
+                    <br>
                     <button id="start">Start</button>
                 </div>
             </div>
@@ -117,25 +136,31 @@ pointer
     <script>
         const startBtn = document.getElementById('start');
         const startMenu = document.getElementById('start-menu');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const probabilityInput = document.getElementById('prob');
         const gridMenu = document.getElementById('grid-wrapper');
         const grid = document.getElementById('grid');
 
         startBtn.addEventListener('click', () => {
             startMenu.classList.add('hide');
             gridMenu.classList.remove('hide');
+            gridHeight = heightInput.value;
+            gridWidth = widthInput.value;
+            chanceOfMine = probabilityInput.value;
+            numberOfMines = Math.floor(gridHeight * gridWidth * chanceOfMine);
+            generateGrid();
+            createCanvas();
+            map();
         });
 
-        let gridHeight = 10;
-        let gridWidth = 10;
+        let gridHeight;
+        let gridWidth;
         let gridArr = [];
-        let chanceOfMine = 0.4;
-        let numberOfMines = Math.floor(gridHeight * gridWidth * chanceOfMine);
+        let chanceOfMine;
+        let numberOfMines;
         let firstTouch = true;
         let gameOver = false;
-
-        generateGrid();
-        createCanvas();
-        map();
 
         function call(e) {
             let y = Math.floor(e / 10);
@@ -145,60 +170,7 @@ pointer
                     if (gridArr[y][x] != -1) {
                         firstTouch = false;
 
-                        while (y < gridHeight) {
-                            let ele = document.getElementById(y * 10 + x);
-                            ele.firstChild.innerText = gridArr[y][x];
-                            while (x < gridWidth) {
-                                let ele = document.getElementById(y * 10 + x);
-                                ele.firstChild.innerText = gridArr[y][x];
-                                x++;
-                                if (gridArr[y][x] == -1) {
-                                    break;
-                                }
-                            }
-                            x = e % 10;
-                            while (x > 0) {
-                                let ele = document.getElementById(y * 10 + x);
-                                ele.firstChild.innerText = gridArr[y][x];
-                                x--;
-                                if (gridArr[y][x] == -1) {
-                                    break;
-                                }
-                            }
-                            x = e % 10;
-                            y++;
-                            if (gridArr[y][x] == -1) {
-                                break;
-                            }
-                        }
-                        y = Math.floor(e / 10);
-                        x = e % 10;
-                        while (y > 0) {
-                            let ele = document.getElementById(y * 10 + x);
-                            ele.firstChild.innerText = gridArr[y][x];
-                            while (x < gridWidth) {
-                                let ele = document.getElementById(y * 10 + x);
-                                ele.firstChild.innerText = gridArr[y][x];
-                                x++;
-                                if (gridArr[y][x] == -1) {
-                                    break;
-                                }
-                            }
-                            x = e % 10;
-                            while (x > 0) {
-                                let ele = document.getElementById(y * 10 + x);
-                                ele.firstChild.innerText = gridArr[y][x];
-                                x--;
-                                if (gridArr[y][x] == -1) {
-                                    break;
-                                }
-                            }
-                            x = e % 10;
-                            y--;
-                            if (gridArr[y][x] == -1) {
-                                break;
-                            }
-                        }
+                        open(e);
                     }
                     else {
                         while (gridArr[y][x] == -1) {
@@ -253,6 +225,65 @@ pointer
 
         }
 
+        function openCell(y, x) {
+            let ele = document.getElementById(y * 10 + x);
+            ele.firstChild.innerText = gridArr[y][x];
+        }
+
+        function open(e) {
+            let y = Math.floor(e / 10);
+            let x = e % 10;
+            while (y < gridHeight) {
+                let ele = document.getElementById(y * 10 + x);
+                ele.firstChild.innerText = gridArr[y][x];
+                while (x < gridWidth) {
+                    openCell(y, x)
+                    x++;
+                    if (gridArr[y][x] == -1) {
+                        break;
+                    }
+                }
+                x = e % 10;
+                while (x > 0) {
+                    openCell(y, x)
+                    x--;
+                    if (gridArr[y][x] == -1) {
+                        break;
+                    }
+                }
+                x = e % 10;
+                y++;
+                if (gridArr[y][x] == -1) {
+                    break;
+                }
+            }
+            y = Math.floor(e / 10);
+            x = e % 10;
+            while (y > 0) {
+                openCell(y, x)
+                while (x < gridWidth) {
+                    openCell(y, x)
+                    x++;
+                    if (gridArr[y][x] == -1) {
+                        break;
+                    }
+                }
+                x = e % 10;
+                while (x > 0) {
+                    openCell(y, x)
+                    x--;
+                    if (gridArr[y][x] == -1) {
+                        break;
+                    }
+                }
+                x = e % 10;
+                y--;
+                if (gridArr[y][x] == -1) {
+                    break;
+                }
+            }
+        }
+
         function map() {
             for (var i = 0; i < gridHeight; i++) {
                 for (var j = 0; j < gridWidth; j++) {
@@ -289,6 +320,8 @@ pointer
             }
             return count;
         }
+        2
+
 
     </script>
 </body>
