@@ -10,6 +10,7 @@ let gameOver = false;
 let firstTouch = true;
 let gameWon = false;
 let checked = [];
+const IMG = '<img src="Mine.svg" class="mine-logo">';
 loadDefaults();
 makeCanvas();
 placeMines();
@@ -44,9 +45,6 @@ $('.mine-box').click((e) => {
             }
         }
     }
-});
-$('.navbar-end').click(() => {
-    console.log(grid);
 });
 $('.choose-mode-right').click(() => {
     if (!digMode) {
@@ -182,7 +180,6 @@ function showUsingCoordinates(i, j) {
 }
 function mark(a) {
     if (typeof a === "string") {
-        let i = '<img src="Mine.svg" class="mine-logo">';
         if (!($("#" + a).hasClass('dark-brown-box') || $("#" + a).hasClass('brown-box'))) {
             if ($("#" + a).html() != "M" && numberOfMinesPlaced > 0) {
                 $("#" + a).html("M");
@@ -258,13 +255,4 @@ function checkOpen() {
         }
     }
     return temp;
-}
-$(".logo").click(map);
-function map() {
-    for (var i = 0; i < size; i++) {
-        for (var j = 0; j < size; j++) {
-            let temp = "#" + (i * size + j);
-            $(temp).text(grid[i][j]);
-        }
-    }
 }
