@@ -176,3 +176,46 @@ nav{
 .green-background{
     background-color: #A2D048;
 }
+
+.modal{
+    width: 40rem;
+    height: max-content;
+    background-color: #EFEFEF;
+    border-radius: 2rem;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -7.5rem;
+    margin-left: -22rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.modal>h2{
+    font-size: 4rem;
+    margin: 0;
+}
+
+.modal>button{
+    width: 40%;
+    height: 3rem;
+    font-size: 1.4rem;
+    font-weight: 900;
+    border-radius: 1rem;
+    background-color: #A2D048;
+    border: none;
+    color: #EFEFEF;
+}
+
+.modal-back{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+}

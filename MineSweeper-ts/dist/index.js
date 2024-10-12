@@ -1,16 +1,33 @@
 "use strict";
 let size = 10;
-let chanceOfMine = 0.35;
+let chanceOfMine = 0.1;
 let numberOfMines = 0;
+let checkedAmount = 0;
+let numberOfMinesPlaced = 0;
 let grid = [];
 let digMode = true;
 let gameOver = false;
 let firstTouch = true;
+let gameWon = false;
 let checked = [];
 loadDefaults();
 makeCanvas();
 placeMines();
 putNumbers();
+$('.restart-btn').click(() => {
+    numberOfMines = 0;
+    numberOfMinesPlaced = 0;
+    grid = [];
+    digMode = true;
+    gameOver = false;
+    gameWon = false;
+    firstTouch = true;
+    checked = [];
+    loadDefaults();
+    cleanCanvas();
+    placeMines();
+    putNumbers();
+});
 $('.mine-box').click((e) => {
     if (!gameOver) {
         if (firstTouch) {
@@ -46,6 +63,7 @@ $('.choose-mode-left').click(() => {
     }
 });
 function loadDefaults() {
+    $('.modal-back').hide();
     if (digMode) {
         $('.choose-mode-right').addClass('green-background');
     }
@@ -72,12 +90,20 @@ function makeCanvas() {
         $('.grid').append(c);
     }
 }
+function cleanCanvas() {
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            $("#" + (i * size + j)).text("").removeClass('brown-box').removeClass('dark-brown-box');
+        }
+    }
+}
 function placeMines() {
     for (var i = 0; i < size; i++) {
         let tempArr = [];
         for (var j = 0; j < size; j++) {
             if (Math.random() < chanceOfMine) {
                 tempArr.push(-1);
+                numberOfMinesPlaced++;
                 numberOfMines++;
             }
             else {
@@ -86,7 +112,7 @@ function placeMines() {
         }
         grid.push(tempArr);
     }
-    $('.number-of-mines-text').text(numberOfMines);
+    $('.number-of-mines-text').text(numberOfMinesPlaced);
 }
 function putNumbers() {
     for (var i = 0; i < size; i++) {
@@ -115,6 +141,7 @@ function minesInRadius(i, j) {
 function show(a) {
     if (typeof a === "string") {
         if ($("#" + a).html() != "M") {
+            checkedAmount++;
             let t = parseInt(a);
             let j = t % size;
             let i = Math.floor(t / size);
@@ -124,6 +151,10 @@ function show(a) {
             }
             else if (grid[i][j] == 0) {
                 expand(i, j);
+            }
+            if (checkOpen() == (size * size) - numberOfMines - 1) {
+                gameWon = true;
+                gameOverFunc();
             }
             if ($("#" + a).hasClass('green-box')) {
                 $("#" + a).addClass('brown-box');
@@ -153,21 +184,18 @@ function mark(a) {
     if (typeof a === "string") {
         let i = '<img src="Mine.svg" class="mine-logo">';
         if (!($("#" + a).hasClass('dark-brown-box') || $("#" + a).hasClass('brown-box'))) {
-            if ($("#" + a).html() != "M" && numberOfMines > 0) {
+            if ($("#" + a).html() != "M" && numberOfMinesPlaced > 0) {
                 $("#" + a).html("M");
-                numberOfMines--;
+                numberOfMinesPlaced--;
             }
             else if ($("#" + a).html() == "M") {
                 $("#" + a).html("");
-                numberOfMines++;
+                numberOfMinesPlaced++;
             }
         }
         // on inserting a image/SVG you cant change the mine to a number withour logic??
-        $('.number-of-mines-text').text(numberOfMines);
+        $('.number-of-mines-text').text(numberOfMinesPlaced);
     }
-}
-function gameOverFunc() {
-    gameOver = true;
 }
 function expand(a, b) {
     checked.push((a * size + b));
@@ -175,9 +203,8 @@ function expand(a, b) {
         for (var j = b - 1; j <= b + 1; j++) {
             if (i >= 0 && i < size) {
                 if (j >= 0 && j < size) {
+                    showUsingCoordinates(i, j);
                     if ((!checkin(checked, (i * size + j))) && grid[i][j] == 0) {
-                        console.log("Checking");
-                        showUsingCoordinates(i, j);
                         expand(i, j);
                     }
                 }
@@ -209,6 +236,28 @@ function checkValid(a) {
             putNumbers();
         }
     }
+}
+function gameOverFunc() {
+    gameOver = true;
+    if (gameWon) {
+        $('.game-over-text').text('You Won!!!');
+    }
+    else {
+        $('.game-over-text').text('You Lost:(');
+    }
+    $('.modal-back').show();
+}
+function checkOpen() {
+    let temp = 0;
+    for (var i = 0; i < size; i++) {
+        for (var j = 0; j < size; j++) {
+            let a = i * size + j;
+            if ($("#" + a).hasClass('brown-box') || $("#" + a).hasClass('dark-brown-box')) {
+                temp++;
+            }
+        }
+    }
+    return temp;
 }
 $(".logo").click(map);
 function map() {
