@@ -50,10 +50,6 @@ $('.mine-box').click((e) => {
     }
 });
 
-$('.navbar-end').click(() => {
-    console.log(grid);
-})
-
 $('.choose-mode-right').click(() => {
     if (!digMode) {
         digMode = true;
@@ -294,15 +290,4 @@ function checkOpen(): number {
         }
     }
     return temp;
-}
-
-$(".logo").click(map);
-
-function map(): void {
-    for (var i = 0; i < size; i++) {
-        for (var j = 0; j < size; j++) {
-            let temp: String = "#" + (i * size + j);
-            $(temp).text(grid[i][j]);
-        }
-    }
 }
